@@ -18,7 +18,7 @@ class Train_Task:
         S = config["split_size"]
         B = config["number_boxes"]
         C = config["number_classes"]
-        self.model = YOLOv1(split_size = S, number_boxes = B, number_classes = C).to(self.device)
+        self.model = YOLOv1(split_size = S, num_boxes = B, num_classes = C).to(self.device)
 
         self.dataloader = Load_Data(config)
         self.loss = YOLOv1Loss(config)
