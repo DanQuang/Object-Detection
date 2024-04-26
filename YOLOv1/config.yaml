@@ -1,7 +1,7 @@
 data:
-  csv_file: /content/data/csv_file.csv
-  img_dir: /content/data/img_dir
-  label_dir: /content/data/label_dir
+  csv_file: /content/100examples.csv
+  img_dir: /content/images
+  label_dir: /content/labels
 split_size: 3
 number_boxes: 2
 number_classes: 20
