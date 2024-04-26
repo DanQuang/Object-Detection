@@ -21,8 +21,9 @@ class YOLOv1Loss(nn.Module):
         predictions = predictions.reshape(-1, self.S, self.S, self.C + self.B*5)
 
         # Calculate IoU for 2 predicted bboxes and targets
-        iou_b1 = intersection_over_union(predictions[..., -9:-5], targets[..., -4:])
-        iou_b2 = intersection_over_union(predictions[..., -4:], targets[..., -4:])
+        # print(predictions[..., -9:-5].shape)
+        iou_b1 = intersection_over_union(predictions[..., -9:-5], targets[..., -9:-5])
+        iou_b2 = intersection_over_union(predictions[..., -4:], targets[..., -9:-5])
         ious = torch.cat([iou_b1.unsqueeze(0), iou_b2.unsqueeze(0)], dim= 0)
 
         # Take the box with highest IoU out of the two prediction
@@ -42,7 +43,7 @@ class YOLOv1Loss(nn.Module):
             )
         )
 
-        box_targets = exists_box * targets[..., -4:]
+        box_targets = exists_box * targets[..., -9:-5]
 
         # Take sqrt of width, height of boxes to ensure that
         box_predictions[..., 2:4] = torch.sign(box_predictions[..., 2:4]) * torch.sqrt(
@@ -66,7 +67,7 @@ class YOLOv1Loss(nn.Module):
 
         object_loss = self.mse(
             torch.flatten(exists_box * pred_box),
-            torch.flatten(exists_box * targets[..., -5:-4]),
+            torch.flatten(exists_box * targets[..., -10:-9]),
         )
 
         # ======================= #
@@ -75,12 +76,12 @@ class YOLOv1Loss(nn.Module):
 
         no_object_loss = self.mse(
             torch.flatten((1 - exists_box) * predictions[..., -10:-9], start_dim=1),
-            torch.flatten((1 - exists_box) * targets[..., -5:-4], start_dim=1),
+            torch.flatten((1 - exists_box) * targets[..., -10:-9], start_dim=1),
         )
 
         no_object_loss += self.mse(
             torch.flatten((1 - exists_box) * predictions[..., -5:-4], start_dim=1),
-            torch.flatten((1 - exists_box) * targets[..., -5:-4], start_dim=1)
+            torch.flatten((1 - exists_box) * targets[..., -10:-9], start_dim=1)
         )
 
         # ================== #
@@ -89,7 +90,7 @@ class YOLOv1Loss(nn.Module):
 
         class_loss = self.mse(
             torch.flatten(exists_box * predictions[..., :-10], end_dim=-2,),
-            torch.flatten(exists_box * targets[..., :-5], end_dim=-2,),
+            torch.flatten(exists_box * targets[..., :-10], end_dim=-2,),
         )
 
         loss = (

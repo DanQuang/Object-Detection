@@ -56,9 +56,9 @@ class Train_Task:
         for epoch in range(initial_epoch, initial_epoch + self.num_epochs):
             mean_loss = []
 
-            for _, (X, y) in tqdm(enumerate(train)):
+            for _, item in tqdm(enumerate(train)):
                 self.optim.zero_grad()
-                X, y = X.to(self.device), y.to(self.device)
+                X, y = item["image"].to(self.device), item["label_matrix"].to(self.device)
 
                 out = self.model(X)
                 loss = self.loss(out, y)
@@ -67,4 +67,4 @@ class Train_Task:
                 loss.backward()
                 self.optim.step()
 
-            print(f"Epoch {epoch}: Train loss: {mean_loss / len(mean_loss)}")
+            print(f"Epoch {epoch}: Train loss: {sum(mean_loss) / len(mean_loss)}")

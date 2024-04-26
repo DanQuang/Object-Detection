@@ -2,12 +2,12 @@ data:
   csv_file: /content/100examples.csv
   img_dir: /content/images
   label_dir: /content/labels
-split_size: 3
+split_size: 7
 number_boxes: 2
 number_classes: 20
 train_batch: 32
 dev_batch: 32
 test_batch: 32
 num_epochs: 10
-learning_rate: 0.01
+learning_rate: 0.00002
 save_path: checkpoint
