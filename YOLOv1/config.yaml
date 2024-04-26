@@ -1,0 +1,13 @@
+data:
+  csv_file: /content/data/csv_file.csv
+  img_dir: /content/data/img_dir
+  label_dir: /content/data/label_dir
+split_size: 3
+number_boxes: 2
+number_classes: 20
+train_batch: 32
+dev_batch: 32
+test_batch: 32
+num_epochs: 10
+learning_rate: 0.01
+save_path: checkpoint
