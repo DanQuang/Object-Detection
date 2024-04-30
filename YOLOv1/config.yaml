@@ -9,5 +9,6 @@ train_batch: 32
 dev_batch: 32
 test_batch: 32
 num_epochs: 10
+patience: 5
 learning_rate: 0.00002
 save_path: checkpoint

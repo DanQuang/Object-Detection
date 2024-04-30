@@ -4,7 +4,7 @@ import os
 from tqdm.auto import tqdm
 from model import YOLOv1
 from dataset import Load_Data
-from utils import intersection_over_union, non_max_suppression, mean_average_precision
+from utils import mean_average_precision, get_bboxes
 from loss import YOLOv1Loss
 
 class Train_Task:
@@ -12,7 +12,7 @@ class Train_Task:
         self.num_epochs = config["num_epochs"]
         self.learning_rate = config["learning_rate"]
         self.save_path = config["save_path"]
-        # self.patience = config["patience"]
+        self.patience = config["patience"]
         self.device = "cuda" if torch.cuda.is_available() else "cpu"
         # init model
         S = config["split_size"]
@@ -68,3 +68,39 @@ class Train_Task:
                 self.optim.step()
 
             print(f"Epoch {epoch}: Train loss: {sum(mean_loss) / len(mean_loss)}")
+
+            self.model.eval()
+            with torch.inference_mode():
+                pred_boxes, target_boxes = get_bboxes(dev, self.model, 0.5, 0.5, self.device)
+
+                mean_avg_prec = mean_average_precision(pred_boxes, target_boxes, iou_threshold= 0.5)
+
+                print(f"mAP in Dev set: {mean_avg_prec}")
+
+                # save last model
+                torch.save({
+                    'epoch': epoch,
+                    'model_state_dict': self.model.state_dict(),
+                    'optim_state_dict': self.optim.state_dict(),
+                    'score': mean_avg_prec
+                }, os.path.join(self.save_path, last_model))
+
+                if mean_avg_prec < best_score and epoch > 0:
+                    threshold += 1
+                else:
+                    threshold = 0
+
+                if mean_avg_prec >= best_score:
+                    best_score = mean_avg_prec
+                    torch.save({
+                        'epoch': epoch,
+                        'model_state_dict': self.model.state_dict(),
+                        'optim_state_dict': self.optim.state_dict(),
+                        'score':mean_avg_prec
+                    }, os.path.join(self.save_path, best_model))
+                    print(f"Saved the best model with mAP of {mean_avg_prec:.4f}")
+
+                # early stopping
+                if threshold >= self.patience:
+                    print(f"Early stopping after epoch {epoch + 1}")
+                    break
