@@ -28,7 +28,7 @@ class YOLOv1Loss(nn.Module):
 
         # Take the box with highest IoU out of the two prediction
         iou_maxes, bestbox = torch.max(ious, dim=0)
-        exists_box = targets[..., -5].unsqueeze(3)
+        exists_box = targets[..., -10].unsqueeze(3)
 
         # ======================== #
         #   FOR BOX COORDINATES    #

@@ -52,12 +52,12 @@ class VOCDataset(Dataset):
             x_cell, y_cell = self.S * x - j, self.S * y - i
             w_cell, h_cell = w * self.S, h * self.S
 
-            if label_matrix[i, j, -5] == 0:
-                label_matrix[i, j, -5] = 1
+            if label_matrix[i, j, -10] == 0:
+                label_matrix[i, j, -10] = 1
                 box_coordinates = torch.tensor(
                     [x_cell, y_cell, w_cell, h_cell]
                 )
-                label_matrix[i, j, -4:] = box_coordinates
+                label_matrix[i, j, -9:-5] = box_coordinates
                 label_matrix[i, j, class_label] = 1
 
         return {
