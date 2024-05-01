@@ -71,7 +71,7 @@ class Train_Task:
 
             self.model.eval()
             with torch.inference_mode():
-                pred_boxes, target_boxes = get_bboxes(dev, self.model, 0.5, 0.5, self.device)
+                pred_boxes, target_boxes = get_bboxes(dev, self.model, 0.5, 0.4, self.device)
 
                 mean_avg_prec = mean_average_precision(pred_boxes, target_boxes, iou_threshold= 0.5)
 
