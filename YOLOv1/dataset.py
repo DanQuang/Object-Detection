@@ -7,10 +7,10 @@ from torch.utils.data import random_split
 from torchvision.transforms import transforms
 
 class VOCDataset(Dataset):
-    def __init__(self, config):
+    def __init__(self, config, csv_file):
         super(VOCDataset, self).__init__()
 
-        self.annotations = pd.read_csv(config["data"]["csv_file"])
+        self.annotations = pd.read_csv(csv_file)
         self.img_dir = config["data"]["img_dir"]
         self.label_dir = config["data"]["label_dir"]
         self.transform = transforms.Compose([
@@ -71,9 +71,10 @@ class Load_Data:
         self.dev_batch = config["dev_batch"]
         self.test_batch = config["test_batch"]
 
-        self.dataset = VOCDataset(config)
+        self.dataset = VOCDataset(config, config["data"]["csv_file"])
 
-        self.train_dataset, self.dev_dataset, self.test_dataset = random_split(self.dataset, [0.7, 0.1, 0.2])
+        self.train_dataset, self.dev_dataset = random_split(self.dataset, [0.8, 0.2])
+        self.test_dataset = VOCDataset(config, config["data"]["test_file"])
 
     def load_train_dev(self):
         train_dataloader = DataLoader(self.train_dataset,
