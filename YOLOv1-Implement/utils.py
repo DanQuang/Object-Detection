@@ -99,6 +99,10 @@ def mean_average_precision(pred_boxes, true_boxes, iou_threshold= 0.5, box_forma
 
         total_true_bboxes = len(ground_truths)
 
+        # If none exists for this class then we can safely skip
+        if total_true_bboxes == 0:
+            continue
+
         for detection_idx, detection in enumerate(detections):
             ground_truth_imgs = [bbox for bbox in ground_truths if bbox[0] == detection[0]]
 
