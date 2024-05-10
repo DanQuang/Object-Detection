@@ -8,10 +8,10 @@ Building YOLOv1 model from Scratch, following the original paper: [You Only Look
 To train the YOLOv1 model, use the command line:
 
 ```bash
-python main.py --config config.yaml
+python YOLOv1-Implement/main.py --config YOLOv1-Implement/config.yaml
 ```
 
-To test the Seq2Seq model, go to main.py and command these codes:
+To test the Seq2Seq model, go to YOLOv1-Implement/main.py and command these codes:
 
 ```python
 logging.info("Training started...")
