@@ -11,7 +11,7 @@ To train the YOLOv1 model, use the command line:
 python YOLOv1-Implement/main.py --config YOLOv1-Implement/config.yaml
 ```
 
-To test the Seq2Seq model, go to YOLOv1-Implement/main.py and command these codes:
+To test the YOLOv1 model, go to YOLOv1-Implement/main.py and command these codes:
 
 ```python
 logging.info("Training started...")
